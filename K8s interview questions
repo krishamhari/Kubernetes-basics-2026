@@ -1,3 +1,36 @@
 1. What is Kubernetes?
-Ans: Kubernetes is a container orchestration platform tool, it uses to deploy, manage, scale, monitor conatiners automatically.
-Example: Instead of running containers manually, Kubernetes manages automatically and restart failed containers. 
+Ans: Kubernetes is a container orchestration platform tool used to deploy, manage, scale, monitor containers automatically.
+Example: Instead of manually running 10 docker containers, Kubernetes manages automatically and restart failed containers. 
+
+2. Why do we need Kubernetes when Docker is already there?
+Ans: Docker is used to create and run a containers, kubernetes use to manage the containers automatically across multiple servers. 
+Example: If one docker container crashes, kubernetes automatically restarts it and can scaleup from 2 pods to 10 pods during high traffic. 
+
+3. What is a Kubernetes Cluster?
+Ans: Kubernetes cluster is a group of master (control plane) and worker nodes that work togehter to run containerized applications.
+Example: In EKS cluster, master manages scheduling and monitoring. While the worker node run application pods.
+
+4. What are Master Node and Worker Node in Kubernetes?
+Ans: Master (control plane) manages the cluster (scheduling, monitoring, API), worker node runs application pods.
+Example: If we deploy a Java app, Master will decide where to run the applciation. Worker will actually run the application pods.
+
+5. What are the main components of the Kubernetes Master Node (Control Plane)?
+Ans: Master node components are API Server, Schduler, ETCD, Controller Manager. They manage cluster communication, storage, schduling, 
+     monitoring. 
+Example: If we run kubectl apply -f app.yml, API server will receives request, schduler will select nodes, ETCD stores the cluster data.
+
+6. What are the main components of a Worker Node?
+Ans: Main componenets are Kubelet, kube proxy, Container runtime. They run and manage pods on the node.  
+Example: Kubelet talks to Master and start pods, kubeproxy handles the network traffic to pods. Containerd/Docker runs container.
+
+7. What is ETCD in Kubernetes?
+Ans: ETCD is a distributed key-value database used by kubernetes to store cluster state and configuration data.
+Example: If we create a deployment with 3 replicas, then the information is stored in the ETCD. If ETCD is down, then cluster state cannot 
+         be managed properly. 
+
+8. What is Kube-API Server?
+Ans: Kube-API server is the entry point of kubernetes, it receives all the request from kubectl, UI or tools and communicate with the other 
+components.
+Example: If you run kubectl get pods, the first request received by API-Server, it will get all the pod details and return the result.
+
+
