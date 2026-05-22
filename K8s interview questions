@@ -33,4 +33,14 @@ Ans: Kube-API server is the entry point of kubernetes, it receives all the reque
 components.
 Example: If you run kubectl get pods, the first request received by API-Server, it will get all the pod details and return the result.
 
+9. What is Kube Scheduler?
+Ans: Kube Scheduler will decide which worker node should run a pod based on CPU, Memory, Availability and rule.
+Example: If the CPU is full on Node 1, new pod can be placed on the Node 2 by kube scheduler.
+
+10. What is Controller Manager in Kubernetes?
+Ans: Controller manager continuosly checks the cluster state, ensure the desired state matches with the actual state.
+Example: If a pod crashes, deployment replica is 3, controller manager automatically create the pod and match the replica count 3.
+
+11. 
+
 
