@@ -1,0 +1,33 @@
+Kubernetes:
+
+1. Kubernetes over Docker?
+Single host
+Auto healing
+Auto scaling
+Enterprise level support
+
+2. Kubernetes Architecture?
+Control plane (Master Node) API SERVER, KUBE SCHEDULER, ETCD, CONTROLLER MANAGER
+Data plane (Worked Node) KUBELET, KUBE PROXY, CONTAINER RUNTIME
+
+KUBELET: Create pod, check status of pod, inform API SERVER about the pod status.
+KUBE PROXY: IP address to pod will be allocated by the Kube Proxy, acts as a load balancer to the pod
+CONTAINER RUNTIME: Container runtime is required to start the container. Docker shim is the container runtime which is used by Kubernetes.
+
+
+# kubectl deploy pod.yaml
+
+API SERVER: It will decide to create a pod on which node. Receive the information when kubectl commands are executed………………………..
+KUBE SCHEDULER: It will schedule the creation of pod on node based on the request from API Server.
+ETCD: Store key values and cluster details as backup. While restart the cluster, these backup details are required. 
+Controller: It use to monitor the pod status and ensure whether the desired state matches actual state on the auto healing. If replica set is 3 then 3 pods should be active.
+Cloud Controller Manager: If a user wants to create load balancer, storage on Kubernetes. Then k8s needs to understand the cloud provider like AWS to create the request.
+
+3. Life cycle of Kubernetes:  Install/Upgrade/Modify/Deletion of clusters.
+
+4. POD deployment?
+Kubernetes pod can be created using pod.yml file which has API version and specification
+In a POD, Container A can access Container B. Since container A and B are in the same Kubernetes pod which is allowed to do shared networking which is in the local host and do the shared storage.
+POD is basically a wrapper for container. 
+Cluster IP will be allocated to Pod by kubeproxy
+Application in the container can be accessed via cluster IP which is assigned by kubeproxy.
