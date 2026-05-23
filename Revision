@@ -31,3 +31,80 @@ In a POD, Container A can access Container B. Since container A and B are in the
 POD is basically a wrapper for container. 
 Cluster IP will be allocated to Pod by kubeproxy
 Application in the container can be accessed via cluster IP which is assigned by kubeproxy.
+
+
+
+5. Kubectl?
+Kubectl is similar to Docker CLI to run the container, build the image.....
+To check number of nodes present in the K8s: #kubectl get nodes
+
+6. pod creation?
+USERS > POD
+pod.yml file
+
+Vi pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+# kubectl create -f pod.yml
+
+to check the pod status
+# kubectl get pods
+
+to delete the pod
+# kubectl delete pod <pod_name>
+
+To check all the status of POD: whether it’s running or error of the pod status 
+# kubectl describe pod nginx
+
+To verify the pod logs
+# kubectl logs <pod_name>
+
+7. Deployment creation?
+
+USERS > DEPLOYMENT > Replica Set > POD
+
+Auto healing & Auto scaling cannot be achieved through pod creation.
+Deployment will create replica set and replica set will take care on auto healing process using kubernetes. 
+Controller will moinitor the pod status and ensure the desired state with actual state.
+
+# kubectl apply -f deployment.yml
+## kubectl get deploy
+## kubectl get rs
+## kubectl get pods
+
+How to check all the resources in Kubernetes: (deployment, rs, pod….)
+Kubectl get all
+
+
+How to check all the resources in Kubernetes with namespace:
+Kubectl get all -A
+
+8. Service creation?
+
+USERS > SVC > DEPLOYMENT > Replica Set > POD
+
+Whenver pod goes down, it will be back with replica set configuration (auto healing), pod ip will be changed. 
+Users can't access the application in the pod via Ip address instead they can access via svc (default.com.svc)
+A. Load balancing - Load balance will handle the reqeust and response traffic flow from the users as equal. 
+B. Service Discovery - Now user can access Service but how service will access pod with IP address? Instead of IP address they reach via label & selector info.
+C. Expose to world - Cluster IP, Node Port, Load Balacning. 
+If service type is cluster ip, then people who has access to only kubernetes cluster those can access the POD.
+If it is node port, then who can access the application is deployed within the organization and access to services like ec2, vpc, s3 then they can access the pod.
+If it is load balancing, then the user with the public ip can access the pod, If it is EKS then ELB will provide the public ip using C-C-M (cloud control manager) 
+SVC will share the public ip to the users.
+
+9. 
+
+
+
+
+
+
