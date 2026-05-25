@@ -1,0 +1,6 @@
+Kubernetes support container via CRI (contianer runtime interface)
+
+Below are the list of CRI supported CLI:
+ctr - debugging and Containerd community
+nerdctl - general purpose and Containerd community
+crictl - debugging and Kubernetes community
