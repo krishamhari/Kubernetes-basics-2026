@@ -1,0 +1,107 @@
+K8s Architecture:
+Master Node -> Kube APISERVER, ETCD, Kube Scheduler
+Worker Node -> Kubelet, Kube Proxy, Container runtime
+
+
+ETCD:
+It's a distributed key value database.
+
+Install ETCD in the master node by downloading the binaries in the kubernetes release page and extract it with the service. 
+
+ETCD Listen port 2379 (advertise client urls)
+
+ETCD will have all the cluster information like Nodes, Pods, Configs, Secrets, Accounts, Roles, Bindings and others
+
+
+# ps -aux | grep ETCD
+
+*************************************************************************************************************************************
+
+
+Kube APISERVER: This is the main component to recive and send the info to Kube control.
+
+Install Kube APISERVER in the master node by downloading the binaries in the kubernetes release page and extract it with the service. 
+
+# kubectl get nodes
+
+Here kube control wants to list the nodes present in the cluster.
+
+Nodes info get it from ETCD:
+Kubectl -> Kube APISERVER -> ETCD
+
+Kubectl sends info to Kube APISERVER. KUBE API authenticates the user and validate the request and send it to ETCD.
+ETCD respond with the nodes info. KUBE API sends the response to kubectl.
+
+
+# kubectl create -f pod.yml
+
+Kubectl -> Kube APISERVER <-> Kube Scheduler -> Kube APISERVER -> Update the info - ETCD & -> Sends the pod creation info to Kubelet -> 
+Container runtime -> KUBE API -> Updated - ETCD & -> Kubectl pod creation
+
+
+Kubectl sends info to Kube APISERVER. KUBE API once recieved the request.
+Kube scheduler always monitor Kube APISERVER and get the request.
+Kube scheduler schedules the pod creation on available nodes. Sends the details to APISERVER. 
+APISERVER update the info to ETCD & Sends the Pod creation on the available node request to Kubelet. 
+Kubelet create the request based on the Container runtime.
+
+
+# ps -aux | grep kube apiserver
+
+*************************************************************************************************************************************
+
+Kube Scheduler: This is the component to schedule the pod on nodes.
+
+Install Kube Scheduler in the master node by downloading the binaries in the kubernetes release page and extract it with the service. 
+
+Kube Scheduler is only job to assign the right pod on right nodes based on the resource availability. 
+
+Scheduing is the concept which has many options to do it. We will see it later.
+
+
+# ps -aux | grep kube scheduler
+
+*************************************************************************************************************************************
+
+Kubelet:
+
+Kubeadm does not deploy the kubelet directly in the worker node as like master node. Manually we have to do it.
+Install Kubelet in the worker node by downloading and extract it. 
+
+Kubelet received the request from APISERVER, First register the node and create the pods based on container runtime by pulling the image.
+
+Then monitor the pods and nodes.
+
+# ps -aux | grep kubelet
+
+*************************************************************************************************************************************
+
+Kube Proxy:
+
+Install Kube Proxy in the worker node by downloading the binaries in the kubernetes release page and extract it with the service. 
+
+Pod in the Node A can reach Pod in the Node B using Pod Network. 
+
+Reaching the pod via IP is not good way, IP's to the pods are not stable. It will be reached through services.
+
+Services will have an IP. These IP's can reach to each pods in the nodes.
+
+Here kube proxy will create a table to communicate between the service Ip and Pod IP.
+
+Service IP: 10.71.0.1
+Pod A IP: 10.31.0.1
+Pod B IP: 10.31.0.15
+
+Table:
+10.71.0.1 -> 10.31.0.1
+10.71.0.1 -> 10.31.0.15
+
+*************************************************************************************************************************************
+
+
+
+
+
+
+
+
