@@ -24,7 +24,7 @@ So, pods can have web app & helper app in the single container and deleting also
 
 pod-deploymeny.yml
 apiversion: v1
-kind: pod
+kind: Pod
 metadata: 
   name: myapp-pods
   labels:
@@ -32,8 +32,8 @@ metadata:
        type: front-end
 spec:
   containers:
-    -name: nginx-container
-     image: nginx
+  - name: nginx-container
+    image: nginx
 
 definition-------------
 apiversion: v1 for each object it will be different 
