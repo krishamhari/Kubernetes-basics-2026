@@ -15,3 +15,42 @@ Need to run an web app & helper app multiple times. Also need to map which web a
 app required different request based on the mapping. 
 
 So, pods can have web app & helper app in the single container and deleting also easy to do it. 
+
+
+# kubectl run nginx --image nginx (to run the nginx application in the pod also to pull nginx images from the docker hub)
+# kubectl get pods (to list out the pods created in the cluster)
+
+****************************************************************************************************************************************************
+
+pod-deploymeny.yml
+apiversion: v1
+kind: pod
+metadata: 
+  name: myapp-pods
+  labels:
+       app: myapp
+       type: front-end
+spec:
+  containers:
+    -name: nginx-container
+     image: nginx
+
+definition-------------
+apiversion: v1 for each object it will be different 
+kind: pod (name of the object) 
+metadata: 
+  name: myapp-pods (name of the pods)
+  labels:
+       app: myapp (label the pod)
+       type: front-end (for which server - frontend backend)
+spec:
+  containers: there are lots of things there under spec, container is one of them (list/array) list of containers in the same pod
+    -name: nginx-container (- defines the first container from the list) 
+     image: nginx 
+      
+
+
+
+# kubectl create -f pod-deployment.yml
+# kubectl get pods
+# kubect describe pod myapp-pod 
