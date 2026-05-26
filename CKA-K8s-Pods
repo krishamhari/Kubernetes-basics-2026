@@ -54,3 +54,6 @@ spec:
 # kubectl create -f pod-deployment.yml
 # kubectl get pods
 # kubect describe pod myapp-pod 
+
+To check the pods on which nodes?
+# kubectl get pods -o wide
