@@ -1,0 +1,17 @@
+Pods:
+Node A: Application deployed in the single pod container.
+
+Node -> Pod -> Container -> app
+To extend the availability of the same application we need a one more pod.
+
+Node -> pod a -> container -> app & pod b -> container -> app
+Instead of creating a multiple containers in the same pod, we can run multiple pods.
+
+In some scenario, within the same pod, helper container is required to analyze the documents uploaded by the user in the web app container.
+Multi container pods concept came in to the picture now.
+
+Docker: 
+Need to run an web app & helper app multiple times. Also need to map which web app is linked to which helper app. To delete the web app and helper 
+app required different request based on the mapping. 
+
+So, pods can have web app & helper app in the single container and deleting also easy to do it. 
