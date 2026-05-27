@@ -1,0 +1,51 @@
+A Service is use to connect the user with the applications deployed in the pod.
+
+
+User Accessing the application from the host server.
+Eg:
+User system: 192.12.0.1
+Node: 192.12.0.10
+Pod: 10.123.1.1
+
+IP's are in differnt network to connect it.
+
+Service is use to interact between the user and the web app in the pod network.
+
+Types of service:
+Node Port
+Cluster IP
+Load Balancer
+
+Node Port:
+target Port 80 will be from Pod
+Port 80 will be from service
+port 30008 will be from Node (between 30000-32500)
+If the user do a curl http://192.12.0.10:30008 (application can be accessed)
+
+Service can be used:
+Single Pod on a Single Node (curl http://192.12.0.10:30008)
+Multiple Pods on a Single Node (curl http://192.12.0.10:30008)
+Multiple Pods on a Multiple Nodes (curl http://192.12.0.1:30008, curl http://192.12.0.2:30008, curl http://192.12.0.3:30008)
+
+
+
+Service need to connect with pod (selector & label)
+Service need to connedct with target port of pod (80, service port 80, nodeport 30008)
+
+service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+    type: NodePort
+    ports:
+     - targetport: 80
+       port: 80
+       nodeport: 30008
+    selector:
+      name: myapp
+      type: front-end
+
+
+
