@@ -20,9 +20,9 @@ spec:
       type: frontend
   template:
     metadata:
-      name: myapp-rs
+      name: myapp
       labels:
-        app: myapp-rs-label
+        app: myapp-label
         type: frontend
     spec:
       containers:
