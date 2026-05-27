@@ -1,0 +1,53 @@
+Deployment.yml file is similar to ReplicaSet.yml file
+
+1. It is used to work with production.
+2. We can update the version to the pods with one by one condations.
+3. We can do a pause, resume to apply the changes
+4.
+
+
+Just change the kind and app name
+
+deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+spec:
+  replicas: 3
+  selector:
+    matchlabels:
+      type: frontend
+  template:
+    metadata:
+      name: myapp-rs
+      labels:
+        app: myapp-rs-label
+        type: frontend
+    spec:
+      containers:
+      - name: myapp-nginx
+        image: nginx
+
+
+# kubectl get deployments
+# kubectl get all
+
+Certification Tips:
+Create a deployment
+# kubectl create deployment --image=nginx nginx
+
+Generate Deployment YAML file (-o yaml). Don't create it(--dry-run)
+# kubectl create deployment --image=nginx nginx --dry-run=client -o yaml
+
+Generate Deployment YAML file (-o yaml). Don’t create it(–dry-run) and save it to a file.
+# kubectl create deployment --image=nginx nginx --dry-run=client -o yaml > nginx-deployment.yaml
+
+Make necessary changes to the file (for example, adding more replicas) and then create the deployment.
+# kubectl create -f nginx-deployment.yaml
+
+OR
+
+In k8s version 1.19+, we can specify the --replicas option to create a deployment with 4 replicas.
+# kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml
+
