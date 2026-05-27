@@ -12,11 +12,11 @@ IP's are in differnt network to connect it.
 Service is use to interact between the user and the web app in the pod network.
 
 Types of service:
-Node Port
-Cluster IP
-Load Balancer
+1. Node Port
+2. Cluster IP
+3. Load Balancer
 
-Node Port:
+1. Node Port:
 target Port 80 will be from Pod
 Port 80 will be from service
 port 30008 will be from Node (between 30000-32500)
@@ -46,6 +46,53 @@ spec:
     selector:
       name: myapp
       type: front-end
+
+
+
+
+2. ClusterIP
+
+Front-end - N number of pods are there
+Back-end - N number of pods are there
+Database - N number of pods are there
+
+If pods from front-end wants to connect with the pods are available in the backend, Kubernetes service will be taking care on that.
+ClusterIP interface is use to interact between the pods of front-end and back-enc, since IP's are not stable to use of it. 
+Service (labels & selector for the clusterIP type will be taking care of it)
+
+service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+    type: ClusterIP
+    ports:
+     - targetport: 80
+       port: 80
+    selector:
+      name: myapp
+      type: back-end
+
+Pods in the back-end can be connected with the ClusterIP interface.
+
+
+
+
+3. Load Balancer
+For the external user can access the application in the pods with URL (FQDN) instead of the IP's assinged to the Node. 
+To overcome nodeport concept, where the user can access with the IP's, Load balancer can help us to reach the applciation with URL.
+
+service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+    type: LoadBalancer
+    ports:
+     - targetport: 80
+       port: 80
 
 
 
