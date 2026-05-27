@@ -1,0 +1,18 @@
+Imperative:
+It will have a set of condition to proceed
+
+Declarative:
+Directly reach the destination
+
+
+Imperative commands:
+kubectl run nginx --image=nginx
+kubectl create deployment nginx --image=nginx
+kubectl expose deployment nginx --porta 80
+kubectl edit deployment nginx
+kubectl scale deploymetn nginx --replicas=3
+kubectl set image deployment nginx nginx=nginx:1.18
+
+
+Declarative commands:
+kubectl apply -f deployment.yml
