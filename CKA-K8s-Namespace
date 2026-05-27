@@ -1,0 +1,16 @@
+Namespace is use to isolate the resource from dev with prod and other environment. 
+
+
+Default namespace says the resources are created by the Kubernetes while the cluster is created during first time.
+
+
+# kubectl get pods (says the pods are under default namesapce)
+
+If we change the current context to set context, then dev can be triggered instead of dafault.
+# kubectl config set-context $(kubcetl config current-context) --namespace=dev
+# kubectl get pods (saya the pods are under dev namespace)
+
+# kubectl get namespace
+
+# kubectl get pod --namespace=dev
+# kubectl get pod -n=dev
