@@ -1,0 +1,37 @@
+Replicaset is used to replicate the pods based on the high availability. 
+
+# kubectl explain replicaset
+# kubectl edit rs <replicaset_name> (edit the existing replica set)
+# kubectl create -f rs.yml
+# kubectl get rs
+# kubectl delete rs myapp-replicaset
+# kubectl replace -f rs.yml
+
+# kubectl scale --replicas=6 -f rs.yml
+# kubectl scale replicaset(type of object) myapp-replicaset(name of the object) --replicas=6 
+
+
+
+rs.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-rs
+spec:
+  replicas: 3
+  selector:
+    matchlabels:
+      type: frontend
+  template:
+    metadata:
+      name: myapp-rs
+      labels:
+        app: myapp-rs-label
+        type: frontend
+    spec:
+      containers:
+      - name: myapp-nginx
+        image: nginx
+  
+
+  
