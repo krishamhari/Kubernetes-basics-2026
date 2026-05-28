@@ -1,14 +1,18 @@
 Imperative:
-It will have a set of condition to proceed
+It will have a set of condition to proceed with single line execution to run or create the onjects.
 
 Declarative:
-Directly reach the destination
+Directly reach the destination with the yaml file to run or create a object.
+Local file > live object configuration file > json - last applied configuration
 
+Whenever we use apply command to change or remove or add fields in the local file, it will be applied to live object configuration and updated to 
+last applied configuration.
 
 Imperative commands:
 kubectl run nginx --image=nginx
 kubectl create deployment nginx --image=nginx
-kubectl expose deployment nginx --porta 80
+kubectl expose pod nginx --name=svc-nginx --port=80
+kubectl expose deployment nginx --port=80
 kubectl edit deployment nginx
 kubectl scale deploymetn nginx --replicas=3
 kubectl set image deployment nginx nginx=nginx:1.18
