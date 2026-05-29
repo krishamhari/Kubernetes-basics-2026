@@ -1,0 +1,201 @@
+#################
+Manual selector:
+If pod is created with pending status due to the scheduler doesn't schedule a node.
+
+Assign a node to the new pod by deleting the exist pod.
+
+Also, we can assign a node to the exist pod with the binding concept.
+
+
+
+1. Label & Selector:
+We can select the kubernetes object with type, function and etc....
+
+label the object first - objects like pod, replicaset, deployment, service......
+
+use selector to the select the object with the labels.
+
+If replicaset is created with a label app=app1 then the pod should have the same label app=app1. Selector will match the labels now.
+
+
+2. Taints & Tolerations:
+Taint will be set on Node. 
+Tolerations will be set on Pods.
+
+Taint set on Node will accept the only pods which toleration for the particular node. But tolerate pods can place it on any other nodes too.
+
+Note: Basically pods will be placed on Worker node not on master node. So, taint will be set on Master node to accept the tolerate pods.
+
+Apply taint on node, apply tolerate on pod then tolerate pod will be assigned to taint node.
+
+NoSchedule: Don't enter into room. (pod won't assign to the nodes unless it has tolerations)
+PreferNoSchedule: Avoid entering the room. (if pod is not assigned anywhere then it can assign to node has PreferNoSchedule)
+NoExecute: Don't enter + remove from the room (pod won't assign to the nodes and also assigned pods will be removed quickly)
+
+
+3. Node Selectors:
+Pod can be assinged to the Nodes based on the node selection, First label the nodes with key/value
+Assign a node selector in the pod and select the nodes.
+
+a. kubectl label node node01 size=large
+
+b. Pod.yml
+apiVersion:
+kind:
+metadata:
+  name: myapp
+  type:
+spec:
+ container:
+  Image:
+ nodeselector:
+  size: Large
+
+Now myapp pod only select the node01
+
+
+4. Node affinity
+Pods can be assigned to the Nodes with the set of rules with the node affinity. 
+In the node affinity rule:
+operator says In, NotIn, Exist
+Key: size
+Value:
+-Large
+-Medium
+
+Types of node affinity: Available
+requiredDuringSchedulingignoredDuringExecution
+PreferredDuringSchedulingignoredDuringExecution
+
+# High performance pod to assign on node
+requiredDuringSchedulingignoredDuringExecution: Scenario 1 & 2
+Scenario 1: if labels are assigned to the node, Pods will be setup with the matching labels on the Node. If no labels on the node then pods won't
+assigng. (required during scdehuling)
+Scenario 2:If pods are already exist and if labels are removed from the node, then pods will continue (ignored during execution)
+
+# low performance pod to assign on node
+PreferredDuringSchedulingignoredDuringExecution: Scenario 3 & 4
+Scenario 3: if labels are assigned not assigned to the node, Pods will be setup on the Node based on Node availability and ignore affinity rules. 
+(preferred during scheduling)
+Scenario 4:If pods are already exist and if labels are removed from the node, then pods will continue (ignored during execution)
+
+
+5. Taints & Tolerations vs Node affinity:
+Taints & Tolerations:
+3 Nodes & 3 Pods (taint nodes with colors blue, green, red) (tolerate pods with color blue, green, red)
+Matching the toleration pods with the taint nodes. 
+Note: Pod can assign to any other pods without taint apply.
+
+Node Affinity:
+Label the node with color.
+Set affinity rules with the pod.
+Affinity rules in the pod should match with the lables in the node. Also there is no mandatory to place to affinity rules pod to label nodes. It can
+be set anywhere.
+
+Note:
+If we use both: T&T and Node Affinity
+The respective color pods will be apply on the color nodes. Other pods can be assigned on the other nodes. 
+
+6. Resoruce Requirements:
+Node will have CPU and Memory to place the pods.
+Pods will be placed on the respective nodes where the resources are highly available.
+
+Resource request:
+Assign a reqeust of cpu and memory to the Pod.
+
+Resoruce Limits:
+Limiting the resoruce for the pod.
+
+Exceed limits:
+After limiting the resoruces to the pods, when its exceeds the CPU it will be throttle and pods cannot use more cpu than the limit.
+But in the case of memory, pods can use more memory than the limits. If it's exceeds the limit then CPU and Memory resoruce gets decreased &
+pods will be in terminate state (out of memory - oom)
+
+Request & Limit:
+A. No request & No limits
+B. No request & limits
+C. Request & Limits
+D. Request & No limits
+
+
+
+
+
+
+
+
+
+Pod.yml
+apiVersion:
+kind:
+metadata:
+  name:
+  type:
+spec:
+ container:
+  Image:
+
+Replicaset.yml
+apiVersion:
+kind:
+metadata:
+  name:
+spec:
+ Replicas:
+ selector:
+  matchlabels:
+    type:
+ Template:
+  metadata:
+   name:
+   labels:    
+      app:
+      type:
+  spec:
+    container:
+    - Image=
+
+
+Deployment.yml
+apiVersion:
+kind:
+metadata:
+  name:
+  labels:
+    app:
+    type:
+spec:
+ Replicas:
+ Selector:
+  matchlabels:
+   type:
+ template:
+  metadata:
+    name:
+    labels:
+      type:
+  spec:
+    container:
+      Image:
+
+
+Service.yml
+apiVersion:
+kind:
+metadata:
+  name:
+spec:
+  type: NodePort
+  ports:
+   - targetport:
+     port:
+     nodeport:
+   selector:
+      name:
+      type:
+
+
+
+
+
+
