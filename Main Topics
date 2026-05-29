@@ -1,0 +1,16 @@
+Core Concepts:
+K8s Architecture
+Pod - define pod details
+Replicaset - define auto healing with replicas
+Deployment - define pod & replicaset & upgrade image version, rollback, rolling update
+Service - define the type of service (nodeport, clusterip, load balancer)
+Namespace - define the namespace for the onjects in the node to isolate it
+Imperative vs Declarative commands - kubectl run pod <pod_name> vs kubectl apply pod.yml
+
+Scheduling:
+Manual selector - Pod with no node details, manually setup the pod with nodes
+Node selector - Set key/value in the pod.yml and labels in the node.
+Label & selector - set labels for the object and selector will match the labels with other object
+Taints & Tolerations: Taints on node, tolerate on pod. Tolerate pod will be assigned to Taint node
+Node Affinity: With affinity rules on pod will be assigned to the nodes with labels.
+Resource Requirement: Based on the resource reqeust and limits for the pods. Pods will be assigned on the Nodes.
