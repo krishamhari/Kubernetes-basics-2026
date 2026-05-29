@@ -111,12 +111,27 @@ After limiting the resoruces to the pods, when its exceeds the CPU it will be th
 But in the case of memory, pods can use more memory than the limits. If it's exceeds the limit then CPU and Memory resoruce gets decreased &
 pods will be in terminate state (out of memory - oom)
 
+Behaviour CPU
 Request & Limit:
-A. No request & No limits
-B. No request & limits
-C. Request & Limits
-D. Request & No limits
+A. No request & No limits - Pod A & B can consume the CPU but Pod A might consume all the CPU. Other pods might face lack of CPU resources. 
+B. No request & limits - Pod A & B can consume more CPU but the limit exceeds.
+C. Request & Limits - Pod A & B might have 1 CPU but limit exceeds.
+D. Request & No limits - Pod A & B might have 1 CPU but there is no limits. 
 
+Behaviour Memory
+Request & Limit:
+A. No request & No limits - Pod A & B can consume the memory but Pod A might consume all the memory. Other pods might face lack of memory resources. 
+B. No request & limits - Pod A & B can consume more memory but the limit exceeds. Out of Memory - pod terminate
+C. Request & Limits - Pod A & B might have 1M memory but limit exceeds. Out of Memory - pod terminate 
+D. Request & No limits - Pod A & B might have 1M memory but there is no limits. Avoiding OOM
+
+
+Limit Range: It is used to define the defauly CPU resoruces for the container. Resource request, Resource limit, minimum and maximum CPU set.
+Same limit range set will be applicable to the memory.
+
+Resource Quotas:
+We can set the reqeust and limit as maximum and minimum for the CPU and Memory to all the pods in the node.
+Just setup the things in the namespace level.
 
 
 
@@ -130,10 +145,13 @@ apiVersion:
 kind:
 metadata:
   name:
-  type:
+  labels:
+    app:
+    type:
 spec:
- container:
-  Image:
+  container:
+  - image:
+    name:
 
 Replicaset.yml
 apiVersion:
@@ -153,7 +171,7 @@ spec:
       type:
   spec:
     container:
-    - Image=
+    - image:
 
 
 Deployment.yml
