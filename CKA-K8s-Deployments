@@ -1,9 +1,9 @@
 Deployment.yml file is similar to ReplicaSet.yml file
 
 1. It is used to work with production.
-2. We can update the version to the pods with one by one condations.
-3. We can do a pause, resume to apply the changes
-4.
+2. We can update the image version to the pods.
+3. Rollback and Rolling updates can do.
+4. We can do a pause, resume to apply the changes 
 
 
 Just change the kind and app name
