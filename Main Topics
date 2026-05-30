@@ -14,3 +14,8 @@ Label & selector - set labels for the object and selector will match the labels 
 Taints & Tolerations: Taints on node, tolerate on pod. Tolerate pod will be assigned to Taint node
 Node Affinity: With affinity rules on pod will be assigned to the nodes with labels.
 Resource Requirement: Based on the resource reqeust and limits for the pods. Pods will be assigned on the Nodes.
+DaemonSets: It's use to assign pods to all the nodes. (logging agent pod can assign to all nodes)
+Static Pods: kubelet will create a pod without Master node components help. (control plane components can be deployed with static pods)
+PriortiyClasses: For each pod assign to a node is based on the prioirtyclasses. High, low classes will be set and apply it to pods.
+MultipleSchedulers: To create a new custom scheduler to assign a pod on the nodes. It can be created via deployment.yml with configmap
+Scheduling profiles: Instead of creating a multiple scheduler in a separate profile, we can create all the schedulers in a sinle profile.
