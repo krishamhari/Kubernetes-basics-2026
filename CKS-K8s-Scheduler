@@ -167,6 +167,55 @@ Static pods vs Daemonsets
 Both ignored by the kube-scheduler
 
 
+9. Priority classes
+If there are 100 pods in the cluster. 
+
+We have 3 nodes and 100 pods. We can define the high priority for some pods and low for others.
+Only high priority pods will be deployed first and with the remaining resources low priority will take place.
+
+First create yaml definition for priority class set. Value and Preempting
+
+Apply the priority to the pods, by default the prioirty value will be zero in the pods.
+
+1 billion value is high prioirty and -2billion is low priority.
+2 billion value is used for high peroformance like control plane components.
+
+preemptionPolicy: Never (never delete other pods to allocate it themselves)
+preemptionPolicy: high (will delete low prioriy pods, high pods will be in priority even low is exist)
+preemptionPolicy: low (if pod is assigned with nothing and other is lower preemptionpolicy then imporatant is given to policy added one)
+
+
+10. Multiple Schedulers:
+Apart from default kube schedulers, we can create a multiple schedulers to assign a pod to the nodes in the custom way.
+
+pod or deployment yaml file will have the configuration to map the new scheduler yaml file location path details.
+
+my-new-scheduler.yaml will consists of new scheduler details.
+
+11. Configuring Schedule profiles:
+Instead of creating a multiple scheduler in a separate profile, we can create all the schedulers in a sinle profile.
+Each profile can define a scheduler plugin and extension.
+
+Scheduler plugin:
+Scheduler queue(priority sort): It will check the priority classes and with high prioiry pods will go first.
+
+Filtering(noderesourcefit, nodename, nodeunschedule, taintandtolerations, node affinity): 
+Filter the nodes with the resources: pod need 10GI, 2 CPU then it will check the high available nodes and filter it.
+
+Scoring(noderesourcefit, nodename, imagelocality, taintandtolerations, node affinity):
+Scoring is based on the nodes resources, if we have 2 nodes with 4CPU 20GI and 6CPU 40GI then second node score is high for the pods.
+
+Binding(default binder): Based on the queue, filter, score the binding will happen.
+
+
+
+Extension points:
+Scheduler queue: queue
+Filter: Pre filter, filter, post filter
+Score: pre score, score, reserve
+Binding: Permit, prebind, bind, postbind
+
+
 
 
 Pod.yml
