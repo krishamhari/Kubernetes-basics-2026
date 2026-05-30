@@ -135,7 +135,36 @@ Just setup the things in the namespace level.
 
 
 
+7. DaemonSets:
+DaemonSets use to assing a pod to all nodes in the cluster while creating the DaemonSets.
+Also, in use cases it use to set monitoring or logging agents on all nodes.
 
+Note: Without DeamonSets, if we want to assign each pods to each nodes, we need to configure the node details in each pods.
+
+
+8. Static Pods:
+Only kubelet will take care of the all the things in static pods. It will monitor the pods, it will delete the pods based on yml config and
+auto-heal the pods if it is deleted.
+
+There are no Control plane and No kube proxy and No worker node 
+
+Only Kubelet and container run time (pods will be created)
+pod.yml file will be placed in the specifc path to create the pods.
+example: /etc/kubernetes/manifest
+
+Instead of searching for the static path we can config the yml file details in the configuration and configure the static path details
+in the yml.
+
+In use cases:
+Control plane components are handled as static pod, so pods will be healthy and deleted based on yaml configuration.
+In the yaml we can handle the kube-api-server complete info, instead of running it manually to bring it up.
+
+
+Static pods vs Daemonsets
+1. Created by kubelet vs created by kube-api-server 
+2. Deploy control plane components vs deploy logging or monioring agents on all nodes.
+
+Both ignored by the kube-scheduler
 
 
 
