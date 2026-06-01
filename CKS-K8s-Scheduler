@@ -216,6 +216,59 @@ Score: pre score, score, reserve
 Binding: Permit, prebind, bind, postbind
 
 
+12. Admission Controllers:
+
+# kubectl create -f pod.yml
+
+Kube control inform Kube-Apiserver about the creation of Pods, Kube-Apiserver will do Authentication and Authorization and sends the 
+info to kubelet to perform the actions.
+
+Authentication - Whether the user is valid or not to perform the actions.
+Authorization - RBAC - whether the user has the Role to control the actions like get, list, create, update.
+
+But the user doesn't have the actions to control the pod creation like the image should not pull from Public Registry like docker hub,
+not run as a roor user, without namespce the pod creation should not happen.........
+
+So, here Adimission Controller plays a major role after authentication & authorization. They control the plugins like namespacelifecycle,
+Priority, Deafultstorageclass, Defaultingressclass, resroucequota by enabling in the pod creation of Kube-Apiserver.yml files from the 
+path etc/kubernetes/manifests/
+
+or 
+
+enable with kube.apiserver.service
+
+
+13. Validating and Mutating admission controllers:
+
+Validating admission controllers: "Namespaceexist" if the pod has to create then at first it will check the namespace exist or not. Based on
+the availability the request will allowed or denied.
+
+Mutating admission controllers: "defaultstorageclass" If the volume has to create then at first it will check the storage class is defined
+or not. If not then the default will set it to storage class in the volume.
+
+Validating and Mutating both works in different scenario:
+Scenario 1:
+Mutating "Namesapceautoprovision" if the namespace not exist "provison takes place"
+Validating "namespaceexist" Based on the available namespace with mutating "reqeust takes place"
+
+Scenario 2:
+Validating "namespaceexist" the reqeuest will be denied if namespace not exist.
+Steps on Mutating "Namesapceautoprovision" will not happend because valdiating admission controllers rejects the request. 
+
+
+We can custom our own mutating and valdiating admission controllers using webhook server and configuration.
+
+Webhook configuration will be written in yaml file:
+It has webhook server details to send the request and receive the response.
+
+Webhook server:
+It will be written in any programming language and it has the valdiating and mutating details. What Reqeust to recieve and
+response to be sent in json format.
+
+
+
+
+
 
 
 Pod.yml
