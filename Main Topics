@@ -19,3 +19,5 @@ Static Pods: kubelet will create a pod without Master node components help. (con
 PriortiyClasses: For each pod assign to a node is based on the prioirtyclasses. High, low classes will be set and apply it to pods.
 MultipleSchedulers: To create a new custom scheduler to assign a pod on the nodes. It can be created via deployment.yml with configmap
 Scheduling profiles: Instead of creating a multiple scheduler in a separate profile, we can create all the schedulers in a sinle profile.
+Admission controllers: It has the own set of rules to control the kubernetes object creation with "namespaceexist" 
+Valdaiting and Mutating controllers: custom can be done with valdiating and mutating admission controllers using webhook server and configuration.
