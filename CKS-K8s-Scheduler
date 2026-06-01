@@ -246,16 +246,11 @@ the availability the request will allowed or denied.
 Mutating admission controllers: "defaultstorageclass" If the volume has to create then at first it will check the storage class is defined
 or not. If not then the default will set it to storage class in the volume.
 
-Validating and Mutating both works in different scenario:
-Scenario 1:
+Validating and Mutating both works in the order:
 Mutating "Namesapceautoprovision" if the namespace not exist "provison takes place"
 Validating "namespaceexist" Based on the available namespace with mutating "reqeust takes place"
 
-Scenario 2:
-Validating "namespaceexist" the reqeuest will be denied if namespace not exist.
-Steps on Mutating "Namesapceautoprovision" will not happend because valdiating admission controllers rejects the request. 
-
-
+Webhook server:
 We can custom our own mutating and valdiating admission controllers using webhook server and configuration.
 
 Webhook configuration will be written in yaml file:
@@ -266,7 +261,14 @@ It will be written in any programming language and it has the valdiating and mut
 response to be sent in json format.
 
 
+Here:
+First create webhook server with set of rules.
+Create webhook conifguration for deployment
+Create webhook service to expose with webhook server
 
+Now: deploy a deployment.yml and check the "security context" is created by default
+Override on deployment.yml with the "security context" parameter and check the describe pod and validation 
+If we set the "security context" as unaccepted rules on the deployment then the pod creation won't be created.
 
 
 
