@@ -22,6 +22,12 @@ Scheduling profiles: Instead of creating a multiple scheduler in a separate prof
 Admission controllers: It has the own set of rules to control the kubernetes object creation with "namespaceexist" 
 Valdaiting and Mutating controllers: custom can be done with valdiating and mutating admission controllers using webhook server and configuration.
 
+Logging & Monitoring:
+Monitoring Cluster components and logs: To retrive the number of nodes in cluster, healthy nodes, to check performance of metrics of the node.
+Monitoring Pod logs: To check the performance of metrics on the pods such as CPU, Memory.
+
+
+Application Lifecycle management:
 
 
 
