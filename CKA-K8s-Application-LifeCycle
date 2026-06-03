@@ -1,0 +1,68 @@
+Application Lifecycle Management
+
+1. Rolling Updates and Rollback
+While deploying a deployment, Replicaset will deploy the pods with the replicaset counts. 
+If we update the deployment with Image version or any updates in the deployment, rolling update strategy takes place. 
+
+Rolling update strategy:
+Recreate update strategy: Delete the existing instance and recreate the new instances. (application down - impact downtime) 
+Rolling update strategy: Default strategy, It will delete and update one by one pods. (No impact)
+
+Rollback:
+If we face any issue with the updated deployment, need to rollback to the older version.
+
+
+Commands:
+# kubectl create -f deploy myapp
+# kubectl apply -f deploy myapp or kubect set image deploy myapp my-container-name=updatedimageversion
+
+# kubectl rollout undo deploy myapp
+
+# kubectl rollout status deploy myapp
+# kubectl rollout history status deploy myapp
+
+Important:
+Recreate/RollingUpdate configuration in yaml
+deployment.yml
+spec:
+ strategy:
+    type: Recreate/RollingUpdate
+
+2. Configure Applications 
+A. Configuring commands and arguments in the application
+B. Configuring Environment varibales
+C. Configuring Secrets
+
+A. Configuring commands and arguments in the application
+Docker has CMD and Entrypoint to run the docker commands while creating the container. CMD can overwritten and Entrypoint is main purpose to run.
+Kubernetes has Command and Arguments to run the kuberenets commands while createing pods. We can set both arguments and commands in yaml file.
+Example: 
+To run the java applciation in dev environment. Java info in entrypoint and env info in CMD.
+# docker run my-java-app
+runs the java in the container with dev env
+
+# docker run my-java-app prod
+runs the java in the container with prod env
+
+Command (entrypoint) # kubectl run nginx --image=nginx --command python
+Arguments (CMD) # kubectl run nginx --image=nginx pink
+
+Important:
+Command configuration in yaml
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+    command: 
+      - "sleep"
+      - "5000"
+
+
+
+
+
+
+
+
+
+
