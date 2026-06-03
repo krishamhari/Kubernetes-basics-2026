@@ -1,0 +1,68 @@
+1. Monitoring Cluster Components and logs
+2. Monitoring Applications and logs
+
+
+1. Moniroing Cluster Components and logs
+In the kuberenetes cluster, why monitor?
+To retrive the number of nodes in the cluser and how many are healthy & performance metrics of the node such as CPU, Memory, Network and 
+Disk utilization. We use Metrics-Server to retrive it.
+
+Also, to retrive the number of pods in the node and  to check the performance metrics of the pods such as CPU, Memory of them.
+
+Below are the tools use to anyalse the data and show the metrics in the easy way to view it.
+Metric-Server
+Prometheus
+Elastic Stack
+Dynatrace
+
+# kubectl top node
+# kubectl top pods
+
+A. Deploy the Metrics Server in your Kubernetes cluster by applying the latest release components.yaml manifest using the following command:
+
+Run the kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+serviceaccount/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+service/metrics-server created
+deployment.apps/metrics-server created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io create
+
+
+
+
+2. Monitoring Applications and logs
+If we run the application with detached mode, runs a container in the background.
+# docker run -d <docker_image>
+
+In the docker, we want to check the existing application logs from the container deployed
+# docker logs event-simulator-app
+
+-f to check the following logs live events of the application
+# docker logs -f event-simulator-app
+
+Similarly in the Kubernetes
+# kubectl logs -f event-simulatora-app (will show the live logs of the application in the container)
+
+But in the kuberentes we have mulitple containers in the pods.
+# kubectl logs -f event-simulator-app -c container_name (mention the container name to show the logs of the application in the specific container)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
