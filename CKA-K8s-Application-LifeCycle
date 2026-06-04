@@ -31,7 +31,7 @@ spec:
 2. Configure Applications 
 A. Configuring commands and arguments in the application
 B. Configuring Environment varibales
-C. Configuring Secrets
+C. Configuring configmaps
 
 A. Configuring commands and arguments in the application
 Docker has CMD and Entrypoint to run the docker commands while creating the container. CMD can overwritten and Entrypoint is main purpose to run.
@@ -56,6 +56,43 @@ spec:
     command: 
       - "sleep"
       - "5000"
+
+B. Configuring env variables 
+Configuring env varibales in the kubernetes is adding a env varaibles to the container where the application is deployed.
+Important:
+spec:
+  containers:
+  - name: ubuntu
+    image: ubuntu
+  env:
+  - name: APP_COLOR
+    value: Pink
+
+C. Configuring ConfigMaps
+Create configmap and add env data key/values in it.
+Now Inject configmaps details in the pod.
+
+Important:
+creating configmaps
+kubectl create configmap webapp-config-map /
+--from-literal=APP_COLOR=darkblue /
+--from-literal=APP_OTHER=disregard
+
+
+
+injecting configmaps into pods
+spec:
+  containers:
+  - env:
+    - name: APP_COLOR
+      ValueFrom:
+      configMapKeyRef:
+        name: webapp-config-app
+        key: APP_COLOR
+
+
+
+
 
 
 
