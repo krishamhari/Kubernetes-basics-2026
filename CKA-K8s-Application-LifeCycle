@@ -32,6 +32,7 @@ spec:
 A. Configuring commands and arguments in the application
 B. Configuring Environment varibales
 C. Configuring configmaps
+D. Configuring Secrets
 
 A. Configuring commands and arguments in the application
 Docker has CMD and Entrypoint to run the docker commands while creating the container. CMD can overwritten and Entrypoint is main purpose to run.
@@ -74,13 +75,23 @@ Now Inject configmaps details in the pod.
 
 Important:
 creating configmaps
-kubectl create configmap webapp-config-map /
+kubectl create configmap webapp-configmap /
 --from-literal=APP_COLOR=darkblue /
 --from-literal=APP_OTHER=disregard
 
 
 
 injecting configmaps into pods
+Env
+spec:
+  containers:
+  envFrom:
+  - ConfigmapRef:
+       name: webapp-configmap
+
+
+or
+Single ENV
 spec:
   containers:
   - env:
@@ -90,12 +101,60 @@ spec:
         name: webapp-config-app
         key: APP_COLOR
 
+or
+Volumes:
+- name: webapp-configmap-volumes
+  configmap:
+    configmapName: webapp-configmap
+
+D. Configuring Secrets
+Create secrets and add env data key/values in it.
+Now inject secrets details in the pod.
+
+Note: While creating secrets the value should be in encrcpt format instead of decrypt. All the secrets are sensitive data.
 
 
 
+Important:
+creating secrets
+kubectl create secrets generic webapp-secrets /
+--from-literal=DB_Host=mysql /
+--from-literal=DB_Password=password
 
 
+injecting secrets into pods
+Env
+spec:
+  containers:
+  envFrom:
+  - secretRef:
+       name: webapp-secrets
 
+or
+
+Single env
+spec:
+  containers:
+  - env:
+    - name: DB_Password
+      ValueFrom:
+      secretRef:
+        name: webapp-secrets
+        key: DB_Password
+
+or 
+
+Volumes:
+- name: webapp-secrets-volumes
+  secret:
+   secretName: webapp-secret
+
+Inside the container
+# ls /opt/webapp-secrets-volumes
+db_host db_password db_user
+
+# cat /opt/webapp_secrets-volumes/db_password
+password
 
 
 
