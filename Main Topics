@@ -28,7 +28,13 @@ Monitoring Pod logs: To check the performance of metrics on the pods such as CPU
 
 
 Application Lifecycle management:
-
+RollingUpdate & Recreate: While updating the image version in the deployment, rollingupdate will delete and recreate pods one by one. 
+                          Recreate strategy will kill all pods and recreated (impact apps)
+Configuration command and arguments: We can set command in the deploy.yml file to run the container with python, java based on the image. 
+                                     Arguments is env (prod,dev) can be mentioned.
+Configuring Env variables: Configuring env variables in the pod definition file. Instead of harcoding in the file, we can use cm or secrets.
+Configuring CongiMaps: It's a non-sensitive data, we can create configmaps and configure the key/value in it. Inject configmap in the pods.
+Configuring Secrets: It's a sensitive data, we can create secrets and configure the key/value in it. Inject secret in the pods.
 
 
 
