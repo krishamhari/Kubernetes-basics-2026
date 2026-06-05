@@ -35,9 +35,12 @@ Configuration command and arguments: We can set command in the deploy.yml file t
 Configuring Env variables: Configuring env variables in the pod definition file. Instead of harcoding in the file, we can use cm or secrets.
 Configuring CongiMaps: It's a non-sensitive data, we can create configmaps and configure the key/value in it. Inject configmap in the pods.
 Configuring Secrets: It's a sensitive data, we can create secrets and configure the key/value in it. Inject secret in the pods.
+Secret-Store-CSI-Driver: Instead of using secrets in k8s, we can use Secrets from Secretmanager of AWS or Azure, hashivault.
+Encrypting Secret Data at REST: Enable Encrypt data config in the API-Server, ETCD won't expose the secrets data in it.
 
-
-
+Multi-Containers: web-app, main-app pods are created as containers in the pods, scale up together and scale down together.
+Init-Containers: Init-containers is basically check the database is started or not, once db starts - init-containers will be down. Main-app starts
+Sidecar-Containers: sidecar-containers starts before main-app starts, it will be end after main-app end.
 
 
 
@@ -58,7 +61,8 @@ Pending:
 Then, create a service of type NodePort with the same name (httpd) that exposes the pod on port 80.
 # kubectl run httpd --image=httpd:alpine --port=80 --expose   for cluster type
 2. Adding a nodename details in the pod.yml file - documentation check
-3. 
+3. secrets.yml file placed in git repository for Dev env, if someone can commit the file and impact the pipeline. How .gitignore and pre-commit tools help.
+
 
 
 
