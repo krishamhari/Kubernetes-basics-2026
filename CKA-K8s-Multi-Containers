@@ -1,0 +1,53 @@
+
+Multi-Containers: 
+web-app, main-app pods are created as containers in the pods, scale up together and scale down together.
+=Web-app-C & Main-app-C Scale up <--------> Web-app-C & Main-app-C Scale down
+spec:
+      containers:
+        - name: myapp
+          image: alpine:latest
+        - name: myapp-1
+          image: alpine:latest
+
+Init-Containers: 
+Init-containers is basically check the database or backend app is started or not, once db or backend starts - 
+init-containers will be down. Main-app starts. We can have many init container to run the process before main application starts.
+=Init Containers > Database check > Init-C down > Main app starts 
+spec:
+      containers:
+        - name: myapp
+          image: alpine:latest
+          command: ['sh', '-c', 'while true; do echo "logging" >> /opt/logs.txt; sleep 1; done']
+          volumeMounts:
+            - name: data
+              mountPath: /opt
+      initContainers:
+        - name: logshipper
+          image: alpine:latest
+          # Setting restartPolicy: Always makes this a sidecar container.
+
+Sidecar-Containers: 
+sidecar-containers starts before main-app starts, it will be end after main-app end.
+Sidecar-C Starts before Main-app-C starts ------> Sidecar-C ends after Main-app-C ends
+
+Volumes mentioned for web-app-C should be transfer to sidecar-C via mount path. Mount path can be different.
+spec:
+      containers:
+        - name: myapp
+          image: alpine:latest
+          command: ['sh', '-c', 'while true; do echo "logging" >> /opt/logs.txt; sleep 1; done']
+          volumeMounts:
+            - name: data
+              mountPath: /opt
+      initContainers:
+        - name: logshipper
+          image: alpine:latest
+          # Setting restartPolicy: Always makes this a sidecar container.
+          restartPolicy: Always
+          command: ['sh', '-c', 'tail -F /opt/logs.txt']
+          volumeMounts:
+            - name: data
+              mountPath: /opt
+      volumes:
+        - name: data
+          emptyDir: {}
