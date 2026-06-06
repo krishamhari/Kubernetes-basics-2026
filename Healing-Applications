@@ -1,0 +1,125 @@
+Before Virtual server: 
+Scaling the server is Horizontal Scaling and Sacling the resources on the existing server is Vertical Scaling.
+
+
+In the kubernetes:
+
+Scaling Cluster Infra:
+A. Scaling the node is horizontal
+B. Scaling the resources on the node is vertical
+
+
+Scaling Workloads:
+A. Scaling the pod is horizontal pod autoscaler
+B. Scaling the resources on the pod is vertical pod autoscaler
+
+
+Manual scaling:
+Node:
+kubeadm join......
+
+Pod:
+kubectl scale.....
+kubectl edit deloy myapp (resource limits)
+
+
+Automates scaling:
+Pod:
+Horizontal Pod Autoscaler
+Vertical Pod Autoscaler
+
+
+
+
+
+Horizontal Pod Autoscaler (HPA):
+Manual: 
+# kubectl scale deployment myapp --replicas=3
+We can't always track the metrics of the pod and scale with manual one.
+
+Automate: Replicas maximum 10 and minimum 1 and if 50% triggered the autoscaling will happen
+# kubectl autoscale deployment myapp --cpu-percent=50 -min=1 max=10
+Note: HPA will monitor the metrics server and do the automation
+
+Declarative:
+hpa.yml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  creationTimestamp: null
+  name: nginx-deployment
+spec:
+  maxReplicas: 3
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx-deployment
+status:
+  currentMetrics: null
+  desiredReplicas: 0
+  currentReplicas: 0
+
+
+
+Inplace resizing Pod:
+If a resourve limit or request is changed in the container, pod has to be restarted to relfect the resource changes. 
+
+To avoid restart of pod, inplace resizing pod is introduced.
+
+We can either restart the pod by changing cpu or memory depends on the configuration set.
+
+
+
+
+Vertical Pod Autoscaler:
+
+Manual Scaling:
+It's not recommended to change the resources of pods, while it requires the restart of the pod.
+
+Auto Scaling:
+Step 1: Install auto scaling provision in the cluster.
+Step 2: # kubectl get pods -n kube-system | grep vpa
+Step 3: VPA recommender, VPA Updater, VPA admission controller
+Step 4: Recommender monitors the metrics. Updater get the info from recommender(evicts pods if requried). Admission controller recreate the pods.
+Step 5: Crete vpa.yml
+
+
+VPA.yml
+apiVersion: autoscaling/v2
+kind: VerticalPodAutoscaler
+metadata:
+  name: nginx-deployment
+spec:
+   targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: flask-app
+  updatePolicy:
+    updateMode: "Recreate"
+    evictionRequirements:
+      - resources: ["cpu", "memory"]
+        changeRequirement: TargetHigherThanRequests
+  resourcePolicy:
+    containerPolicies:
+      - containerName: '*'
+        minAllowed:
+          cpu: 100m
+          memory: 100Mi
+        maxAllowed:
+          cpu: 1
+          memory: 500Mi
+        controlledResources: ["cpu", "memory"]
+
+
+
+
+
+
+
