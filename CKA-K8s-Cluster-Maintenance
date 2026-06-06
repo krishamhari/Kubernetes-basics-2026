@@ -1,0 +1,159 @@
+1. Opertaing System Upgrade:
+
+Master Node, Worker Node-1, Worker Node-2, Worker Node-3
+
+When we plan to upgrade or do any patches on the Worker Node-01. It goes down for a while.
+Pod on node-01 will be placed on other node-2, node-3 if it has replica set.
+
+Also if node goes down for mote than 5 minutes. Worker node will decide the node is dead. New pods will be created in the other nodes.
+Once node-01 comes back, the pod will be placed in node-01
+
+
+There is an another way to implement the upgrade or patches without impacting the pods.
+
+
+# kubectl drain node-1 
+We can apply drain on the node-1, if node-01 goes down, the pods in the node-1 will be moved to other nodes.
+We can't schedule the pods on the node-1 until if goes down and back to it. Then applying the uncodon on it. We can schedule the pods.
+This only works when replica set is applied to the pods.
+
+# kubectl uncordon node-1
+We need to apply uncordon on the node-1, saying the scheduler to schedule the pods on the node-01 once uncordon on the node-01
+
+Note:
+The pods which is moved to other nodes will not be back to node01 until the existing pods deleted or new pods created on the node2, node3
+
+# kubectl cordon node2
+We can't schedule a new pods on the node2
+
+
+
+2. Kubernetes release
+
+v1.33.0
+1 - major
+33 - minor (features and functionalities)
+0 - patches (bug fixes)
+
+
+3. Cluster upgrade: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+We are using kubeadm here.
+
+Before upgrading the cluster, we need to upgrade the kubeadm. Then upgrade the master node and node on the worker nodes.
+
+Here in this case kubelet is running the controlplane components as pod on the master nodes.
+
+So, After upgrading the master node using kubeadm. Upgrade kubelet and worker nodes as one by one.
+
+
+Note: Whenever we upgrade the master node, it doesn't mean the pods on the worker node will get impacted but the creation of new pods or replicas
+won't work due to the components on the master node is down.
+
+
+# kubectl get nodes
+Upgrade from v1.28 to v1.29
+
+Step 1: https://kubernetes.io/blog/2023/08/15/pkgs-k8s-io-introduction/
+
+Install packages on each node, check the repositories for the package.
+Also check the OS version using command # cat /etc/*release*
+Check Pretty_Name=ubuntu
+
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+Step 2:
+# Find the latest 1.29 version in the list.
+# It should look like 1.29.x-*, where x is the latest patch.
+sudo apt update
+sudo apt-cache madison kubeadm
+
+Step 3: kubeadm with cluster will be upgraded
+Upgrade control plane
+# replace x in 1.29.x-* with the latest patch version
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.29.x-*' && \
+sudo apt-mark hold kubeadm
+
+# kubeadm version
+# sudo kubeadm upgrade plan
+
+
+Step 4:
+version to upgrade to, and run the appropriate command. For example:
+
+# replace x with the patch version you picked for this upgrade
+sudo kubeadm upgrade apply v1.29.x
+
+Once the command finishes you should see:
+[upgrade/successful] SUCCESS! Your cluster was upgraded to "v1.29.x". Enjoy!
+[upgrade/kubelet] Now that your control plane is upgraded, 
+
+Step 5: drain the controlplane node
+#kubectl drain controlplane<node-to-drain> --ignore-daemonsets
+
+Step 6:
+Upgrade kubelet and kubectl
+# replace x in 1.29.x-* with the latest patch version
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.29.x-*' kubectl='1.29.x-*' && \
+sudo apt-mark hold kubelet kubectl
+
+Restart the kubelet:
+sudo systemctl daemon-reload
+sudo systemctl restart kubel
+
+
+Step 7:
+Only now you can see the master node is upgraded to 1.29.3
+
+#kubectl uncordon controlplane<node-to-drain> 
+
+Step 8: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/upgrading-linux-nodes/
+upgrade worker nodes
+
+First install packages
+ssh node01
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+Second upgrade kubeadm:
+Upgrade worker plane
+# replace x in 1.29.x-* with the latest patch version
+sudo apt-mark unhold kubeadm && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.29.x-*' && \
+sudo apt-mark hold kubeadm
+
+# sudo kubeadm upgrade node
+
+
+Step 9:
+drain the worker node
+#kubectl drain node01<node-to-drain> --ignore-daemonsets
+
+Step 10:
+Upgrade kubelet and kubectl
+# replace x in 1.29.x-* with the latest patch version
+sudo apt-mark unhold kubelet kubectl && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.29.x-*' kubectl='1.29.x-*' && \
+sudo apt-mark hold kubelet kubectl
+
+Restart the kubelet:
+sudo systemctl daemon-reload
+sudo systemctl restart kubel
+
+
+Step 11:
+Only now you can see the worker node is upgraded to 1.29.3
+
+#kubectl uncordon node01<node-to-drain> 
+
+
+Step 8-11 will be repeated for the next worker nodes.
+
+
+
+
+
