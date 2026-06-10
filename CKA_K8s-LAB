@@ -1,8 +1,77 @@
 LAB:
+1) POD Creation
+https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
+apiversion: v1
+kind: Pod
+metadata: 
+  name: myapp-pods
+  labels:
+       app: myapp
+       type: front-end
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+# kubectl run nginx --image=nginx
+# kubectl run nginx --image=nginx --dry-run=client -o yaml 
+
+2) Replicaset Creation: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+rs.yml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myapp-rs
+spec:
+  replicas: 3
+  selector:
+    matchlabels:
+      type: frontend
+  template:
+    metadata:
+      name: myapp-rs
+      labels:
+        app: myapp-rs-label
+        type: frontend
+    spec:
+      containers:
+      - name: myapp-nginx
+        image: nginx
+  
+
+3) Deployment https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+nginx-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+# kubectl create -f nginx-deployment.yaml
+or
+In k8s version 1.19+, we can specify the --replicas option to create a deployment with 4 replicas.
+# kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml
 
 
-1)
-LAB: ETCD backup and restore
+4) Service
+
+5) Namespace
+
+21) ETCD backup and restore
 https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
 Search keyword: backup
 A. Backup ETCD on /opt/snapshot-pre-boot.db using endpoints, cacert, cert, key
