@@ -67,9 +67,52 @@ In k8s version 1.19+, we can specify the --replicas option to create a deploymen
 # kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml
 
 
-4) Service
+4) Service: https://kubernetes.io/docs/concepts/services-networking/service/
+Nodeport:
+ervice.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+    type: NodePort
+    ports:
+     - targetport: 80
+       port: 80
+       nodeport: 30008
+    selector:
+      name: myapp
 
-5) Namespace
+ClusterIP:
+ervice.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+    type: ClusterIP
+    ports:
+     - targetport: 80
+       port: 80
+    selector:
+      name: myapp
+
+Load Balancer:
+service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-end
+spec:
+    type: LoadBalancer
+    ports:
+     - targetport: 80
+       port: 80
+
+5) Namespace: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+# kubectl create namespace kube-org
+
+6) 
 
 21) ETCD backup and restore
 https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
