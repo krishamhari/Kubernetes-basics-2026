@@ -37,13 +37,18 @@ Configuring CongiMaps: It's a non-sensitive data, we can create configmaps and c
 Configuring Secrets: It's a sensitive data, we can create secrets and configure the key/value in it. Inject secret in the pods.
 Secret-Store-CSI-Driver: Instead of using secrets in k8s, we can use Secrets from Secretmanager of AWS or Azure, hashivault.
 Encrypting Secret Data at REST: Enable Encrypt data config in the API-Server, ETCD won't expose the secrets data in it.
-
 Multi-Containers: web-app, main-app pods are created as containers in the pods, scale up together and scale down together.
 Init-Containers: Init-containers is basically check the database is started or not, once db starts - init-containers will be down. Main-app starts
 Sidecar-Containers: sidecar-containers starts before main-app starts, it will be end after main-app end.
+Manual Scaling: Scaling the node, pod can be done using imperative way.
+Automate Scaling: Horizontal pod autoscaler, Vertical pod autoscaler. Scaling the pod is HPA. Scaling the resources in the pod is VPA.
 
 
-
+Cluster Maintenance: 
+Operating System upgrade: OS upgrade on the nodes without affecting the pods in it. Applicable to master and worker nodes.
+Kubernetes Release: v1.33.0 (1-major, 33-minor, 0-patches)
+Cluster Upgrade: There are some major steps to upgrade the cluster using Kubeadm and Kubelet.
+Backup & Restore Methods: Backing up the resource via kube-apiserver and backup the etcd cluster which has all cluster and resoruce creation info.
 
 
 
