@@ -14,7 +14,7 @@ Docker:
 Need to run an web app & helper app multiple times. Also need to map which web app is linked to which helper app. To delete the web app and helper 
 app required different request based on the mapping. 
 
-So, pods can have web app & helper app in the single container and deleting also easy to do it. 
+So, pods can have web app & helper app in the single pod with multi container and deleting also easy to do it. 
 
 
 # kubectl run nginx --image nginx (to run the nginx application in the pod also to pull nginx images from the docker hub)
