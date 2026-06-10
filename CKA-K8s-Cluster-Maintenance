@@ -59,9 +59,9 @@ Install packages on each node, check the repositories for the package.
 Also check the OS version using command # cat /etc/*release*
 Check Pretty_Name=ubuntu
 
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.35.0-1.1/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.35.0-1.1/deb/InRelease.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 Step 2:
 # Find the latest 1.29 version in the list.
@@ -73,7 +73,7 @@ Step 3: kubeadm with cluster will be upgraded
 Upgrade control plane
 # replace x in 1.29.x-* with the latest patch version
 sudo apt-mark unhold kubeadm && \
-sudo apt-get update && sudo apt-get install -y kubeadm='1.29.x-*' && \
+sudo apt-get update && sudo apt-get install -y kubeadm='1.35.0' && \
 sudo apt-mark hold kubeadm
 
 # kubeadm version
@@ -84,7 +84,7 @@ Step 4:
 version to upgrade to, and run the appropriate command. For example:
 
 # replace x with the patch version you picked for this upgrade
-sudo kubeadm upgrade apply v1.29.x
+sudo kubeadm upgrade apply v1.35.0
 
 Once the command finishes you should see:
 [upgrade/successful] SUCCESS! Your cluster was upgraded to "v1.29.x". Enjoy!
@@ -97,12 +97,12 @@ Step 6:
 Upgrade kubelet and kubectl
 # replace x in 1.29.x-* with the latest patch version
 sudo apt-mark unhold kubelet kubectl && \
-sudo apt-get update && sudo apt-get install -y kubelet='1.29.x-*' kubectl='1.29.x-*' && \
+sudo apt-get update && sudo apt-get install -y kubelet='1.35.0-1.1' kubectl='1.35.0-1.1' && \
 sudo apt-mark hold kubelet kubectl
 
 Restart the kubelet:
 sudo systemctl daemon-reload
-sudo systemctl restart kubel
+sudo systemctl restart kubelet
 
 
 Step 7:
@@ -152,6 +152,43 @@ Only now you can see the worker node is upgraded to 1.29.3
 
 
 Step 8-11 will be repeated for the next worker nodes.
+
+
+4. Backeup & Restore methods
+
+A. Instead of creating a resource in the cluster via imperative, use declarative way to reuse the definition file.
+   Also definition file can be stored in the code repository tool like Github where the file can be used by many as refernce.
+
+B. Backup etcd: 
+   Instead of backing up the resource file, etcd can be restored which has all the info of cluster and resource creation.
+
+Save the etcd cluster db and check the status
+# etcdctl snapshot save snapshot.db
+# ls
+# etcdctl snapshot status snapshot.db
+
+C. Restore etcd:
+Save the etcd cluster db. Stop the kube-apiserver. 
+Restore the snapshot.db from the backup directory.
+It will create a new cluster and allow new members to the cluster.
+Daemon reload
+Etcd restart
+Start kube-apiserver
+
+# etcdctl snapshot save snapshot.db
+# ls
+# systemctl stop kube-apiserver
+# etcdctl \
+  snapshot restore snapshot.db \
+  --data-dir /var/lib/etcd-from-backup
+# systemctl daemon reload
+# systemctl restart etcd
+# systemctl start kube-apiserver
+
+Note: 
+While using etcdctl command, use endpoint of the cluster to etcd and certificate details for the authentication.
+
+Backup can be done using etcd cluster and querying from the kube-apiserver.
 
 
 
