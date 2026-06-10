@@ -30,7 +30,7 @@ Multiple Pods on a Multiple Nodes (curl http://192.12.0.1:30008, curl http://192
 
 
 Service need to connect with pod (selector & label)
-Service need to connedct with target port of pod (80, service port 80, nodeport 30008)
+Service need to connedct with target port of pod 80, service port 80, nodeport 30008
 
 service.yml
 apiVersion: v1
@@ -45,7 +45,7 @@ spec:
        nodeport: 30008
     selector:
       name: myapp
-      type: front-end
+      
 
 
 
@@ -57,7 +57,7 @@ Back-end - N number of pods are there
 Database - N number of pods are there
 
 If pods from front-end wants to connect with the pods are available in the backend, Kubernetes service will be taking care on that.
-ClusterIP interface is use to interact between the pods of front-end and back-enc, since IP's are not stable to use of it. 
+ClusterIP interface is use to interact between the pods of front-end and back-end, since IP's are not stable to use of it. 
 Service (labels & selector for the clusterIP type will be taking care of it)
 
 service.yml
@@ -72,7 +72,6 @@ spec:
        port: 80
     selector:
       name: myapp
-      type: back-end
 
 Pods in the back-end can be connected with the ClusterIP interface.
 
