@@ -1,0 +1,54 @@
+LAB:
+
+
+1)
+LAB: ETCD backup and restore
+https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/
+Search keyword: backup
+A. Backup ETCD on /opt/snapshot-pre-boot.db using endpoints, cacert, cert, key
+
+# ETCDCTL_API=3 etcdctl \
+--endpoints=https://127.0.0.1:2379 \
+--cacert=/etc/kubernetes/pki/etcd/ca.crt \
+--cert=/etc/kubernetes/pki/etcd/server.crt \
+--key=/etc/kubernetes/pki/etcd/server.key \
+snapshot save /opt/snapshot-pre-boot.db
+
+
+B. Go to Sleep due to window maintenance
+
+C. Due to some issue in the ETCD upgrade, we need to restore the cluster data from the backup path /opt/snapshot-pre-boot.db
+Step1: stop kube-apiserver
+# mv /etc/kubernetes/manifests/kube-apiserver.yaml /tmp/
+sleep 30
+
+Step2: restore the etcd backup to /var/lib/ path
+# etcdutl snapshot restore snapshot.db --data-dir <data-dir-location>
+# etcdutl snapshot restore /opt/snapshot-pre-boot.db --data-dir /var/lib/etcd-from-backup
+
+Step3: change the volume path in the /etc/kubernetes/manifest/etcd.yaml
+  volumes:
+  - hostPath:
+      path: /var/lib/etcd-from-backup        # NEW restored directory
+      type: DirectoryOrCreate
+    name: etcd-data
+
+Step4: restart the kube-apiserver
+mv /tmp/kube-apiserver.yaml /etc/kubernetes/manifests/
+Check the kube-apiserver pod status
+
+Step5: Restart other control plane components
+# Restart kube-controller-manager
+mv /etc/kubernetes/manifests/kube-controller-manager.yaml /tmp/
+sleep 20
+mv /tmp/kube-controller-manager.yaml /etc/kubernetes/manifests/
+
+# Restart kube-scheduler
+mv /etc/kubernetes/manifests/kube-scheduler.yaml /tmp/
+sleep 20
+mv /tmp/kube-scheduler.yaml /etc/kubernetes/manifests/
+
+# Restart kubelet
+systemctl restart kubelet
+
+Step6: Check the deployment status
