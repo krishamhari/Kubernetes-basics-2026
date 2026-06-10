@@ -18,7 +18,7 @@ ETCD will have all the cluster information like Nodes, Pods, Configs, Secrets, A
 *************************************************************************************************************************************
 
 
-Kube APISERVER: This is the main component to recive and send the info to Kube control.
+Kube APISERVER: This is the main component to receive and send the info for Kube control.
 
 Install Kube APISERVER in the master node by downloading the binaries in the kubernetes release page and extract it with the service. 
 
@@ -82,7 +82,7 @@ Install Kube Proxy in the worker node by downloading the binaries in the kuberne
 
 Pod in the Node A can reach Pod in the Node B using Pod Network. 
 
-Reaching the pod via IP is not good way, IP's to the pods are not stable. It will be reached through services.
+Reaching the pod via IP is not a right way, IP's to the pods are not stable. It will be reached through services.
 
 Services will have an IP. These IP's can reach to each pods in the nodes.
 
