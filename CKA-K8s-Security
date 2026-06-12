@@ -169,6 +169,21 @@ We can see the name of the certificate, alternate name of the certificate, expir
 
 Note: If components like kube-apiserver, ETCD is down we can't view the logs using kubectl but we can see using docker command crictl logs.
 
+# crictl ps -a | grep kube-apiserver
+# crictl logs container_id
+
+
+
+6. Certificates API
+Admin can control the cluster with the TLS certificate. 
+If a new admin comes and request for the Client-Certificate, the request goes to CA server and sign the certifcate and respond it.
+
+But the above process can be done through Certificate API Server, where the request will be send to CA server via API request.
+
+Controller-Manager will do a CSR Approving and CSR signing.
+
+
+
 
 
 
