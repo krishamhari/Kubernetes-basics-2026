@@ -14,7 +14,7 @@ End Users: access to applications in the cluster
 Bots: Third party services can access k8s cluster.
 
 Service Account: Bots
-Diffecrent secure mechanism for the application in the cluster: End users
+Different secure mechanism for the application in the cluster: End users
 Static token file: Admin & Developers
 
 Static token file is csv format which has the details like password, username, userid, groupid. 
@@ -115,6 +115,60 @@ Eg: API_Server-ETCD client and ETCD server certificate can be one CA
 and other client and server certificates can be other CA
 
 Note: In some cases kubelet will act as server and client too.
+
+
+
+4. TLS in Kubernetes - Certificate Creation
+
+A. Certificate Authority:
+Create a public and private key for the Certificate Authority
+
+Generate Keys: ca.key
+# openssl genrsa -out ca.key 2048
+
+Certificate Signing Reqeust (CSR): ca.csr
+# openssl req -new -key ca.key -subj "/CN=KUBERNETES-CA" -out ca.csr
+
+Sign Certificates: ca.crt
+# openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+
+B. Admin user: Client Certificate
+Create a public and private key for the Admin User
+
+Generate Keys: admin.key
+# openssl genrsa -out admin.key 2048
+
+Certificate sending request: admin.csr
+# openssl req -new -key admin.key -subj "/CN=KUBE-ADMIN" -out admin.csr
+
+sign certificates: admin.crt
+# openssl x509 -req -in admin.csr -CA ca.crt -CAKey ca.key -out admin.crt
+
+
+C, D, E: Kube-Scheduler, Kube-Controller-Manager, Kube-Proxy has to be created in the above way for client certification.
+
+*************PENDING*************
+a. ETCD: Server Certificate
+b. KUBE-ApiServer: Server Certificate
+c. Kubelet: Server Certificate
+
+
+
+5. View Certificate Details
+
+To view certificate for Kube-ApiServer
+Hard way: cat /etc/systemd/system/kube-apiserver.service
+kubeadm: cat /etc/kubernetes/manifest/kube-apiserver.yaml
+we can see the path of key & cert of etcd-client-apiserver.crt, kubelet-client-apiserver.crt, apiserver.crt &
+etcd-client-apiserver.key, kubelet-client-apiserver.key, apiserver.key
+
+To view the each crt details in it:
+openssl x509 -in /etc/kubernetes/apiserver.crt -text -noout
+We can see the name of the certificate, alternate name of the certificate, expiry of certificate & Issuer name
+
+
+Note: If components like kube-apiserver, ETCD is down we can't view the logs using kubectl but we can see using docker command crictl logs.
+
 
 
 
