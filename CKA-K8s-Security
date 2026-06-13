@@ -18,7 +18,7 @@ Different secure mechanism for the application in the cluster: End users
 Static token file: Admin & Developers
 
 Static token file is csv format which has the details like password, username, userid, groupid. 
-Note: Static toke file authentication is not a recommended mechanism for securing the kubernetes cluster.
+Note: Static token file authentication is not a recommended mechanism for securing the kubernetes cluster.
 
 
 2. TLS Certificate Prerequisites:
