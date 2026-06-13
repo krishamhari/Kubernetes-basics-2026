@@ -51,10 +51,11 @@ Cluster Upgrade: There are some major steps to upgrade the cluster using Kubeadm
 Backup & Restore Methods: Backing up the resource via kube-apiserver and backup the etcd cluster which has all cluster and resoruce creation info.
 
 
-
-
-
-
+Security:
+Authentication: Who can access the cluster in which method. Admin via certificate & static token file, BOTS via Service account, 
+TLS Certificate: User can access the web server deployed in the cluster with the secured way with the help of tls certificate.
+Certificate API: User like Admin can get the certificate via API method
+KubeConfig file: Cluster, Context, Users all are defined in the kubeconfig file. Context will define like which user can access which cluster
 
 
 
