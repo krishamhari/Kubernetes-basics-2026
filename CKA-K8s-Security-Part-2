@@ -1,0 +1,34 @@
+1. Kube Config file
+How to use kube control command to specifically use kube config file.
+
+Kube config file define 3 section - clusters, context, users. 
+
+Cluster: It has Certificate authority info ca.crt and name of the cluster (mykube-prod)
+Users: Admin user will have info like admin.crt & admin.key and name of the user (myuser-admin)
+Context: It will link the user with the cluster myuser-admin@mykube-prod
+
+Cluster:
+Production - mykube-prod
+Stage - mykube-stage
+Developement - mykube-dev
+
+Users:
+Admin - myuser-admin
+Developers - myuser-dev
+Devops - myuser-devops
+
+Context:
+mykube-prod@myuser-admin
+mykube-stage@myuser-dev
+
+Also context can mention the namespace of the cluster.
+
+Basically kubeconfig file will have the info like which user can access to which cluster with the certificate validation and verification and
+user-cluster are linked with the context.
+
+if kubeconfig.yml is defined in the default path Home /.kube/config then kubectl command can be used directly
+
+# kubectl config view  (it will show all the info in the kubeconfig)
+
+Note: Instead of mentioning the ca.crt in the kubeconfig file of cluster info, try to mention the path /etc/kubernets/pki/ca.crt or add the
+encrypted certificate in it.
