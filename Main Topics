@@ -56,7 +56,12 @@ Authentication: Who can access the cluster in which method. Admin via certificat
 TLS Certificate: User can access the web server deployed in the cluster with the secured way with the help of tls certificate.
 Certificate API: User like Admin can get the certificate via API method
 KubeConfig file: Cluster, Context, Users all are defined in the kubeconfig file. Context will define like which user can access which cluster
-
+APIGroups: Using curl command we can access the kube-apiserver via api. /apis is a named group. /app , /certificate ....are under names group. 
+Authorization: What they can do once they are authenticated. Whether they can list,delete,create pods and denies to create a deployment.
+RBAC: Role based access control, role will be created with the set of actions & user is binded with the role.
+Role & Role Binding: Role will be created with resource actions and Role binding will be done for the user with the role reference.
+Cluster Role & Cluster Role Binding: Cluster role will be created for cluster scoped like node, certificate.... Cluster role bindings with the user for the clsuter role.
+Service account: A third party applications or service can interact with the kubernetes using Service account with the token.
 
 
 
