@@ -29,6 +29,133 @@ user-cluster are linked with the context.
 if kubeconfig.yml is defined in the default path Home /.kube/config then kubectl command can be used directly
 
 # kubectl config view  (it will show all the info in the kubeconfig)
+# kubectl config set-context (name of the context)
+# kubectl config use-context
+# kubectl config view
+# kubectl config --kubeconfig=/root/ set-context (name of the context) ((specific path))
 
 Note: Instead of mentioning the ca.crt in the kubeconfig file of cluster info, try to mention the path /etc/kubernets/pki/ca.crt or add the
 encrypted certificate in it.
+
+
+2. API Groups:
+
+To access the kube-apiserver in the cluster we use kubectl command or via api using curl command
+
+
+/api VS /apis
+
+/api it gives the resources that are avaiables in the cluster like pod, rc, secrets, deploy, service......
+
+/apis says about the Names api groups which has /apps , /authentication , /networkpolicy , /certificate
+under each api group we the set of resources which has the actions to do it. 
+eg: pod (list, delete, create....)
+
+
+
+
+3. Authorization
+Once the authentication is applied for the user. Authorization is will be followed to do their mechanism. So, what they can do with the 
+authorization.
+
+Node Authorizer: User try to connect kube-apiserver or kubelet will access kube-apiserver. With the node authorizer - control the access
+                 to the user or the components in the cluster.
+ABAC: Attribute based access control - user1 can access the policy1 and user2 access the policy2. Each policy define the access control.
+      Whenever the new access to be added in the existing policy then we need to restart kube-apiserver. This is not recommneded         
+RBAC: Role based access control - role1 and role2 will be created with set of actions like create, delete, get pods.
+      Now user will be mapped to the role1 and in the future new actions will be added in the role object.
+WebHook: Third party tool will do the authorization, it allows the user to access the kube-apiserver with the rule/policy defined in it.
+AlwaysAllow: By default alwaysallow is configured in the kube-apiserver service configuration. Won't do any authorization.
+AlwaysDeny: It will deny all the request from the user or bots.....
+
+
+
+4. RBAC - Role Based Access Control
+Role & Role Binding: Namespace scoped
+Step 1: Create a role object with the object name like pods... and actions like get, delete, create and resource name like pod name (blue,green)
+        # kubectl create -f developer-role.yaml
+Step 2: Create a rolebinding with the username and role object name details
+        # kubectl create -f developer-rolebinding.yaml
+
+Step 3: # kubectl get roles
+        # kubectl get rolebinding
+
+Checking Access
+Step 4: # kubectl auth can-i create pods
+        # kubectl auth can-i delete nodes
+        # kubectl auth can-i get nodes as dev-user -namespace research
+
+Note: Also we can mention namespace to restrict the user. And the pod info in the role.yml to restrict the pod from the user to get 
+      the details.
+
+5. Cluster Roles and Cluster Role Binding: Cluster Scoped
+Cluster role is used to create it to access the cluster scoped resources like Node, pvc, certificatesigningrequest, clusterroles, clusterrolebinding
+
+cluster-admin-user - can view nodes, delete nodes, create nodes.....
+
+Cluster Role: It is created a role (cluster-administrative-role) with access to list, create, delete nodes.
+Cluster Role Binding: cluster-admin-user will be mapped with role reference od cluster-adminisstrative
+
+Note: If a user got a access to the node then he can access all the namespaces in the node.
+Role & Rolebinding is helpful for specific namespace.
+
+
+6. Service Account:
+A service account is used for the other applications or services to interact with kubernetes.
+Token in the service account is used to prove his identity.
+To create service account # kubectl create serviceaccount dashboard-k8s (serviceaccountname)
+To create a Token in the service account which is used by the other applications # kubectl create token dashboard-k8s --duration 2h
+
+Every namespace has a default service account.
+The default serviceaccount is automatically attached to the pod on creation.
+The newly created serviceaccount can attach to the pod by adding the "serviceaccountfield" in the pod.
+
+Whenever serviceaccount is added to the pod: 
+It automatially creates a token and mount as a volume.
+Rotates the token.
+It automattically expires the token when the pod is deleted.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
