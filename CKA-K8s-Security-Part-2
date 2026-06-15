@@ -155,6 +155,7 @@ Basically docker will share the Host OS kernel but Container in the different na
 
 If we run a container with root user, we can see the same user in the host level as root user.
 But the process id will be diffrent from each other.
+# docker run user=1000 nginx
 
 list the processess from docker container namespace
 # ps aux (in the container)
@@ -168,13 +169,14 @@ user  PID Command
 root  100 sleep 3600
 root  200 -bash
 
-Note: Need to change the root user to non-root to restrict the access level in the docker conatiner.
-
+Note: 
+Need to change the root user to non-root to restrict the access level in the docker conatiner.
 
 Similarly we have to retrict the access to the user in the Pod level, it will restirct to all the pods.
 Otherwise we can restrict it to specific container.
 Capabilities like giving access to the user to controll all the control in the pod.
 
+The User ID defined in the securityContext of the container overrides the User ID in the POD.
 
 Restrict it in pod level:
 spec:
@@ -192,7 +194,7 @@ spec:
   - name: nginx
     image: private-registry.io/apps/internal-app
     SecurityContext:
-     runasuser: root
+     runasuser: 1000
     Capabilities:
       add: [mac_admin]
 
