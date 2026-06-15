@@ -1,0 +1,149 @@
+1. Network Policy:
+There are three pods where the applications deployed. Front-end, API Server, Database Server.
+
+User(request) ---> Front-end ---> API-Server --> Database
+Database(response)---> API-Server --> Front-end ---> User
+
+Ingress: Incoming traffic
+Step 1: User --> Front-end (ingress traffic from user)
+Step 3: Front-end ---> API-Server (ingress traffic from frontend)
+Step 5: API-Server --> Database (ingress traffic from apiserver)
+
+
+Egress: Outgoing traffic
+Step 2: Front-end ---> API-Server (egress traffic for frontend)
+Step 4: API-Server --> Database (egress traffic for apiserver)
+
+
+Here all the pods doesn't required to connect each due to network policy implemented.
+POD A reach POD B
+POD B reach POD C
+POD A not reach POD C (network policy applied in the POD C where the ingress traffic should be only from POD B)
+
+Ingress traffic:::
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: 6379
+
+
+
+
+Important network policy:
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 172.17.0.0/16
+        except:
+        - 172.17.1.0/24
+    - namespaceSelector:
+        matchLabels:
+          project: myproject
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: 6379
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/24
+    ports:
+    - protocol: TCP
+      port: 5978
+
+Step 1: 
+  podSelector:
+    matchLabels:
+      role: db
+the match lables for the network policy is role:db
+
+
+Step 2:
+policyTypes:
+  - Ingress
+  - Egress
+
+Policy type is ingress and egress
+
+Step 3:
+ingress:
+  - from:
+    - ipBlock:
+        cidr: 172.17.0.0/16
+        except:
+        - 172.17.1.0/24
+    - namespaceSelector:
+        matchLabels:
+          project: myproject
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: 6379
+
+POD B (api pod) frontend label --> POD C (database pod)
+
+Database pod's port is 6379 and tcp protocol.
+
+Database pod should decide the ingress traffic, based on podSelector (frontend role). Only the api pod will reach to database.
+
+Namespace label is myproject for production, so only the api pod from the production environment will reach the database pod.
+
+There is an database backup server which has to query from database, only the server IP 172.17.0.0/16 will reach database except -
+ 172.17.1.0/24
+
+
+Step 4: 
+
+egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/24
+    ports:
+    - protocol: TCP
+      port: 5978
+
+Database pod will allow the outgoing traffic to the database backup server ip 10.0.0.0/24 with port 5978
+
+
+
+Note:
+If a pod allow ingress traffic from the other pods, outgoing traffic to the same pods will happen automatically. Specific policy configuration
+is not required.
+
+
+
+
+
+
