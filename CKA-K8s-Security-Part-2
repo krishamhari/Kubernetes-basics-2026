@@ -116,17 +116,85 @@ Rotates the token.
 It automattically expires the token when the pod is deleted.
 
 
+7. Image Security
+Whenever we create a pod using pod.yml definition file, Basically we use images in the container of the spec block.
+
+Image: nginx (basically it is library/nginx) library is maintained by the team for the image from public repository.
+
+Example for private image:
+To pull a private image from the private repository (private-registry.io/apps/internal-app)
+Internal app- image
+apps- account name the user using...
+private-registry.io (might be docker hub, AWS, Azure)
+
+In docker: Before pulling the image from private repo, first we need to login into dokcer)
+Similarly we need a credenital to login the private repository.
+
+The login credentials will be stored in the secrets and in the definition file need to mention about the secret for the image.
+
+
+# kubectl create secret docker-registry regcred \
+  --docker-server= private-registry.io \
+  --docker-username= docker-user \
+  --docker-password= docker-password \
+  --docker-email= registry-user@org.com
+
+spec:
+  containers:
+  - name: nginx
+    image: private-registry.io/apps/internal-app
+  Imagepullsecrets:
+  - name: regcred
 
 
 
 
+8. Security Context:
+Docker level security context:
+Basically docker will share the Host OS kernel but Container in the different namespace. Host will be in the different namesapce
+
+If we run a container with root user, we can see the same user in the host level as root user.
+But the process id will be diffrent from each other.
+
+list the processess from docker container namespace
+# ps aux (in the container)
+user PID Command
+root  1  sleep 3600
 
 
+list the processess from host namespace
+# ps aux (in the host)
+user  PID Command
+root  100 sleep 3600
+root  200 -bash
+
+Note: Need to change the root user to non-root to restrict the access level in the docker conatiner.
 
 
+Similarly we have to retrict the access to the user in the Pod level, it will restirct to all the pods.
+Otherwise we can restrict it to specific container.
+Capabilities like giving access to the user to controll all the control in the pod.
 
 
+Restrict it in pod level:
+spec:
+  SecurityContext:
+    runasuser: root
+  containers:
+  - name: nginx
+    image: private-registry.io/apps/internal-app
+  
 
+
+Restrict it in container level:
+spec:
+  containers:
+  - name: nginx
+    image: private-registry.io/apps/internal-app
+    SecurityContext:
+     runasuser: root
+    Capabilities:
+      add: [mac_admin]
 
 
 
