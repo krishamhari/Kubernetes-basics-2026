@@ -144,6 +144,29 @@ is not required.
 
 
 
+2. Custom Resource Defintion
+
+Resource like deployment.yml we create and the details like create, list, modify will be updated in ETCD. 
+Controller will monitor the ETCD always and do the changes in the cluster like watch the replicas count and make the desire state.
+
+Resource ---> ETCD <----Controller
+
+
+But when we want to customize the resource creation, we need to create a custom resource defintion file first and declare the details we
+need.
+Eg: 
+If we want to book a flight tickets with the fligh.yml defintion file
+then we need to understand the requirement like what is the apiversion, kind, metadata and spec. Declare all info in the CRD.yaml file
+
+
+Now create the CRD.yaml file
+then create flights.yml file
+
+Note: We need a custom controller to monitor the resource created using CRD.yml defintion file
+
+3. Custom Controllers
+
+
 
 
 
