@@ -67,7 +67,9 @@ Image Security: Images used in the pod has to be secrued by adding the image in 
 Security Context: the process of the container can run as root or non-root user. If container-1 is root then pod level user will be update
                   as root user. And container-2 is not mentioned for scontext then pod's scontext(100) will update it to container-2 as 100
 Network Policy: There are two types of ingress and egress. Pods can reach the other pods via incoming and outcoming network policy.
-
+Custom Resource Definition: It is use to create a object in the kubernetes with customized way. CRD.yaml will define the fields. flight-ticket.yaml will create a resource to book the tickets.
+Custom Controllers: It will monitor the ETCD and book, cancel, modify the flight tickets using flight ticket API
+Operator Framework: It will create a customized resource, Custom resource definition, Custom controller in a single framework using operator.
 
 
 
