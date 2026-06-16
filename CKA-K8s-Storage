@@ -1,0 +1,73 @@
+Docker Storage:
+Storage drivers
+volume drivers
+
+1. Storage drivers on the Image and Container:
+# docker build command to create a image
+# docker run command to run a container with a image
+
+Two layers in the docker storage:
+Image Layer:
+
+Image layer: Source code in this layer is read only
+Container layer: Read and writer access
+
+If a developer changes the code then it will impact on Images and bacause the same image is used in the other deployment.
+It will automatically copy the source code from image layer to container layer. For testing purpose we can do changes in the container layer.
+
+But if container destroys then all the data from the container will be destroyed.
+
+Docker container folder and file system.
+/var/lib/docker
+|
+|
+|--volumes
+|--container
+|--images
+
+
+2. volume drivers
+While running a docker container, volume can be created with volume plugins like local, EBS, Azure file storage.
+
+3. Container storage interface
+Docker container use CSI (container storage interface) to store the data into third party storage tools like Amazon EBS, Azure file storage
+
+
+Note: when a pod is created and trying to get the volume from local, EBS......
+CSI will help to schedule a new volume for the pod from Amazon EBS
+
+A. Provision a new volume on the pod
+B. Provision a new volume on the storage
+C. delete a volume on the pod
+D. volume on a pod
+
+
+4. Persistent Volume:
+PV is cretead by a admin and mapped to the storage like GCP, AMAZON EBC, AZURE FILE
+It can define the storage limit from the storage resource and accessmode like read, write in it.
+
+5. Persistent Volume Claim:
+PVC is created by a developer and he don't know how much volume is required for the logs where the application written on it.
+It will define the storage request by developer from persistent volume. Also accesmode like read, write.
+
+Note:
+Pod will define the container and mount volume in it.
+In the volume define pvc.
+Pvc will get pv.
+PV will attach with the storage resources like EBS.
+
+
+
+6. Storage Class:
+Storage class is use to get the storage from the EBS like dynamic way. No need to mention the limit of the storage request.
+
+POD --> PVC ---> Storage Class
+
+Storage class will automatically create a PV. 
+
+In the stoageclass.yml need to mention the classes of storage like silver, gold, platinum.
+
+
+
+
+
