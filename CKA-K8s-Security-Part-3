@@ -165,7 +165,28 @@ then create flights.yml file
 Note: We need a custom controller to monitor the resource created using CRD.yml defintion file
 
 3. Custom Controllers
+Based on custom resource defintion, fligh ticket object is created and the info stored in ETCD.
+Custom controllers will Monitor ETCD and change the request based on the object in ETCD.
+Custom controller will use Flight ticekt API to book, cancel, modify it based on the object in ETCD.
 
+Note: Custom Controller will be created using go/python language. It will define how API can be used from custom controller.
+GO Install
+git clone custome/controller file
+
+Docker image has to be created with the above files.
+POD/Deployment will be created using docker image
+
+4. Operator Framework
+A new resource is created using custom resource definition. Custom controller will monitor/change the CRD object in ETCD.
+
+The above all steps will created in a single framework using Operator.
+
+Flight.yaml will create a new resource, Custom resource definition, custom controller.
+
+Exampple: ETCD Operator will do kind of below in a single framework
+ETCD Cluster ETCD Controller
+ETCD Backup  Backup Operator
+ETCD Restore 
 
 
 
