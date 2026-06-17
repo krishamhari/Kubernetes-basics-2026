@@ -1,0 +1,99 @@
+Networking:
+A. Switching 
+B. Routing
+C. Default Gateway
+D. DNS configuration
+E. Core DNS
+
+
+
+A) Switching: switching between two system with in same network.
+A - 192.10.1.5
+B - 192.10.1.10
+Switch - 192.10.1.0
+
+B) Routing:
+C - 192.10.2.5
+D - 192.10.2.10
+Switching: 192.10.2.0
+
+With the help of router C-system can reach B system.
+
+192.10.1.0(switch)---------192.10.1.1 <-------> Router <--------> 192.10.2.1-------192.10.2.0(switch)
+
+C) Default Gateway:
+Route table is needed:
+From which IP we need to connect to Which server.
+
+# ip route add 192.10.1.0 via 192.10.2.1
+
+If the A,C wants to connect to internet.
+#  ip route default via 192.10.2.1
+#  ip route default via 192.10.1.1
+
+
+Note:
+Basically to reach different network, route table is required.
+If set default gateway like 0.0.0.0 in the Gateway then the system within internal network not required to crate a table.
+
+# ip link
+# ip addr
+# ip addr add 192.168.1.0/24 dev eth0
+# ip route
+# ip route add 192.168.1.0 via 192.168.2.1
+
+
+
+D. DNS Configuration
+System A can reach System B with IP's and both are in same network.
+If system B is considered as DB as domain name. Instead of pinging with IP, we can go with Names.
+# add system b's IP in the system a
+
+
+System A pings System B with the domain name DB and it fails to connect.
+# if system A pings System B with DB, then it fails because need to add System A with domain name & IP from Domain server.
+
+Also we can create a new DNS server which has all name resolution info. 
+
+Note: If system A had all name resolution details with him but when IP's changes to the server we can't add it manually and monitor. 
+It is applicable for all the systems.
+
+Here DNS server comes in the picture and has all name resolution info with it.
+
+From the system in the linux host server:
+Now for every ping first it checks with etc/dns-config.file and checks DNS server.
+The order might change based on the configuration.
+
+www.google.com
+
+www.google.com / maps.google.com - subdomain
+google.com - domain
+.com - top level domain
+
+
+If system pings www.google.com
+system doesn't know about the DNS name, it start looking for the IP from home router or dns server.
+
+DNS server start looking for .com from root DNS server
+And it will look for google.com from top level domain server
+& start looking for www.google.com google dns server
+& finally dns server replies the IP for www.google.com
+
+ping www.google.com
+ping 142.250.x.x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
