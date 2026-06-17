@@ -3,7 +3,9 @@ A. Switching
 B. Routing
 C. Default Gateway
 D. DNS configuration
-E. Core DNS
+E. Network Namespaces
+F. Docker Networking
+G. Container network interface
 
 
 
@@ -85,11 +87,80 @@ ping 142.250.x.x
 
 
 
+E. Network Namespace
+
+To isolate the container from Host server, we create a namespace for the containers.
+If we have 4 containers in the host and each container will be in different namespace.
+First the containers are isolated now and can't reach the host server due to the network is differnt.
+
+Now each container from different namespace has to communicate each other, create a network switch and namespace can connect to network switch.
+
+Container can reach the LAN network with only the help of Ethernet network.
+Network switch can reach out to ethernet network with the help of Network switch interface.
+
+
+Container ---> Network switch ---> Network switch interface ---> Ethernet0 ----> Lan Network ---> Internet or Other system.
+
+
+C 192.150.15.2 ---> NS 192.150.15.0 ---> NSI 192.150.15.5 ----> E0 192.150.10.2 ---> LAN 192.150.10.0 ----> Other System 192.150.10.3
+
+Note: Host server 192.150.10.1
+
+
+
+F. Docker Networking
+None Netowrk: Docker created in the host doesn't have a IP address for the container. Only host will be having an IP address.
+                 Docker cannot reach any network. From any network we cannot reach a docker container.
+                 Only for the testing reason we can create this container.
+
+Host Network: Docker will have a connetivity with host network. Host = 192.150.10.0 and container = 192.150.10.1
+              We cannot create a another container due to the container port 80 is accessed from host network is standard.
+              curl https://192.150.10.0:80/ 
+
+
+Bridge Network: Bridge network is used to connnect mulitple containers within the same network. 
+                Container can reach bridge network via cable from container and reach the cable from bridge network interface.
+                Bridge network interface will connect to the ethernet0. Eth0 ---> Host network
+
+
+Note: 
+Create network namespace for a container.
+Create bridge network/interface
+Create veth cable
+Attach one end veth cable to namespace
+Attach other end veth cable to bridge network
+Assign the IP address
+Bring the interfaces up
+Enable NAT-IP Masquerade
+
+
+
+G. Container network interface
+The above note is applicable for all the networking namesapces like docker, rkt, kubernetes.
+
+To bringup all in the same page, CNI is introduced to create, attach, bringup the interface & assign IP address.
+
+
+H. Cluster Networking
+master node and worker node, by default kube apiserver is reachable with port 6443 from the other master node and worker node components.
+
+Kubelet from worker node reach the other components in the master node with the respective port
+
+Note: 
+Each node in the master and worker will have eth0 and eth0's will connect to the same server like 192.150.1.0
 
 
 
 
-
+Commands for networking:
+ip link
+ip addr
+ip addr add 192.150.1.10/24 dev eth0
+ip route
+ip route add 192.150.1.0/24 via 192.150.2.0
+arp
+netstat -plnt
+route
 
 
 
