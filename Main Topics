@@ -71,6 +71,17 @@ Custom Resource Definition: It is use to create a object in the kubernetes with 
 Custom Controllers: It will monitor the ETCD and book, cancel, modify the flight tickets using flight ticket API
 Operator Framework: It will create a customized resource, Custom resource definition, Custom controller in a single framework using operator.
 
+Storage:
+PV:
+PVC:
+Storage Class:
+
+Network:
+Switching:
+Routing
+Default Gateway:
+DNS:
+
 
 
 Pending:
@@ -79,6 +90,7 @@ Then, create a service of type NodePort with the same name (httpd) that exposes 
 # kubectl run httpd --image=httpd:alpine --port=80 --expose   for cluster type
 2. Adding a nodename details in the pod.yml file - documentation check
 3. secrets.yml file placed in git repository for Dev env, if someone can commit the file and impact the pipeline. How .gitignore and pre-commit tools help.
+4. Statefulsets
 
 
 
