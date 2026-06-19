@@ -1,0 +1,28 @@
+POD Networking:
+
+Node 1, Node 2, Node 3 (IP Range is 192.150.1.1 , 192.150.1.12, 192.150.1.3
+Lan Network - Connects all nodes (192.150.1.0)
+
+Pod 1, 2, 3 will be in the Node 1 (POD's IP range is based on the Bridge network in the Node1)
+Pod 4 in Node 2 (POD's IP range is based on the Bridge network in the Node2)
+Pod 5,6 in Node 3 (POD's IP range is based on the Bridge network in the Node3)
+
+
+Bridge Network In Node1 (10.244.1.0)
+Pod 1, 2, 3 (10.244.1.1, 10.244.1.2, 10.244.1.3)
+
+
+Bridge Network In Node2 (10.244.2.0)
+Pod 4 (10.244.2.1)
+
+Bridge Network In Node3 (10.244.3.0)
+Pod 5, 6 (10.244.3.1 , 10.244.3.2)
+
+
+Within in the Nodes (pods can connect each other using the bridge network interface) 
+
+But the pods in node 1 need to connect with pods in node 2 ??? 
+Ans: All the bridge network to be created in the same network (10.244.0.0)
+
+
+CNI:
